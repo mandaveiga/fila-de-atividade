@@ -4,18 +4,16 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.util.Date;
-import java.util.UUID;
 
 @MappedSuperclass
 @Data
 public abstract class AbstractModel {
 
     @Id
-    private UUID id;
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Long id;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -26,7 +24,6 @@ public abstract class AbstractModel {
     private Date modified;
 
     public AbstractModel() {
-        this.id = UUID.randomUUID();
         this.created = new Date();
         this.modified = new Date();
     }

@@ -2,7 +2,6 @@ package me.mandaveiga.mult.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface CrudService<T> {
 
@@ -10,11 +9,11 @@ public interface CrudService<T> {
 
     List<T> findAll();
 
-    Optional<T> findById(UUID id);
+    Optional<T> findById(Long id);
 
     Optional<T> update(T body);
 
-    Optional<Boolean> deleteById(UUID id);
+    Optional<Boolean> deleteById(Long id);
 
     Optional<Boolean> deleteAll();
 }

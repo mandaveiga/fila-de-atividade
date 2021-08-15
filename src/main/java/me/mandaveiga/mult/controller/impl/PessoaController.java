@@ -15,9 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
-
-import static org.springframework.web.servlet.function.ServerResponse.badRequest;
 
 @RestController
 @RequestMapping("/pessoa")
@@ -51,4 +50,35 @@ public class PessoaController extends BaseController<Pessoa> {
                 .orElseGet(() -> ResponseEntity.badRequest().build());
     }
 
+    @GetMapping(path = "", produces = "application/json")
+    @ApiOperation(value = "Persist a new user in database.")
+    public ResponseEntity<Object> getAll() {
+
+        List<Pessoa> entities = service.findAll();
+
+        return ResponseEntity.ok(entities);
+    }
+
+    @GetMapping(path = "/{id}", produces = "application/json")
+    @ApiOperation(value = "")
+    public ResponseEntity<Object> show(@PathVariable("id") @NonNull String id ) {
+
+        Optional<Pessoa> entity = service.findById(Long.parseLong(id));
+
+        return entity
+                .map((x) -> ResponseEntity.ok((Object) x))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping(path = "/{id}", produces = "application/json")
+    @ApiOperation(value = "")
+    public ResponseEntity<Object> Delete(@PathVariable(value = "id") long id)
+    {
+        Optional<Boolean> isDeleted = service.deleteById(id);
+
+        return isDeleted
+                .filter((x)-> x.equals(true))
+                .map((x)-> ResponseEntity.ok().build())
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 }

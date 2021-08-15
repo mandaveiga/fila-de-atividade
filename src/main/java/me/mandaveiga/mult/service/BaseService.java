@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public abstract class BaseService<T extends AbstractModel> implements CrudService<T> {
@@ -32,28 +31,17 @@ public abstract class BaseService<T extends AbstractModel> implements CrudServic
     }
 
     @Override
-    public Optional<T> findById(UUID id) {
+    public Optional<T> findById(Long id) {
         return repository.findById(id);
     }
 
 	@Override
     public Optional<T> update(T body) {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        Map<String, Object> objectMap = objectMapper.convertValue(body, Map.class);
-//        objectMap.values().removeIf(Objects::isNull);
-//
-//        Update update = new Update();
-//        objectMap.forEach(update::set);
-//
-//        mongoTemplate.findAndModify(
-//                Query.query(Criteria.where("id").is(body.getId())), update, body.getClass());
-//
-//        return Optional.of(body);
     	return save(body);
     }
 
     @Override
-    public Optional<Boolean> deleteById(UUID id) {
+    public Optional<Boolean> deleteById(Long id) {
         try {
             repository.deleteById(id);
 
