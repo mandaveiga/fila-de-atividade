@@ -27,7 +27,7 @@ public class PessoaValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "name.empty");
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "produtividade", "email.produtividade");
 
-        if (pessoa.getProdutividade() < 30) {
+        if (pessoa.getProdutividade() > 30) {
             errors.rejectValue("produtividade", "Porcentagem de produtividade invalida");
         }
     }
