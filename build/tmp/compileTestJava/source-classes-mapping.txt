@@ -1,0 +1,6 @@
+me/mandaveiga/concretesolutions/ChallengeApplicationTests.java
+ me.mandaveiga.concretesolutions.ChallengeApplicationTests
+me/mandaveiga/concretesolutions/service/UserServiceTest.java
+ me.mandaveiga.concretesolutions.service.UserServiceTest
+me/mandaveiga/concretesolutions/repository/UserRepositoryTest.java
+ me.mandaveiga.concretesolutions.repository.UserRepositoryTest
