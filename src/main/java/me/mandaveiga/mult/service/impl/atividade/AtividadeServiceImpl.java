@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalField;
+import java.time.temporal.TemporalUnit;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -49,9 +53,20 @@ public class AtividadeServiceImpl extends BaseService<Atividade> implements Ativ
                 .build();
     }
 
-    private int calculatePercentage(LocalDateTime timeStart, LocalDateTime timeEnd){
-        //TODO IMPLEMENTAR
-        return 0;
+    public static int calculatePercentage(LocalDateTime timeStart, LocalDateTime timeEnd){
+        long now = System.currentTimeMillis();
+        long start = timeStart.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long end = timeEnd.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+
+        if (start >= end || now >= end) {
+            return 100;
+        }
+
+        if (now <= start) {
+            return 0;
+        }
+
+        return (int) (100 - ((end - now) * 100 / (end - start)));
     }
 
     private int calculateExecutionQueue(List<Atividade> atividades) throws BusinessException {
@@ -60,7 +75,7 @@ public class AtividadeServiceImpl extends BaseService<Atividade> implements Ativ
                 .max(Comparator.comparing(Atividade::getExecucao));
 
         if(!maiorAtividade.isPresent()){
-            throw new BusinessException("Não a nenhuma atividade para ser executada");
+            throw new BusinessException("Não há nenhuma atividade para ser executada");
         }
         return maiorAtividade.get().getEsforco();
     }

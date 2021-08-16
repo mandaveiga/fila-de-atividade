@@ -34,6 +34,7 @@ public class ExecucaoController extends BaseController<Atividade>{
     @GetMapping(path = "", produces = "application/json")
     @ApiOperation(value = "Execution status")
     public ResponseEntity<Object> getIsExecuting() {
+        AtividadeManager.getInstance().updatePorcentagemDeConclusao();
         AtividadeManager isExecuting = AtividadeManager.getInstance();
         return ResponseEntity.ok(isExecuting);
     }
