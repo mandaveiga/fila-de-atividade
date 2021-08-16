@@ -1,6 +1,8 @@
 package me.mandaveiga.mult.controller.validator;
 
+import me.mandaveiga.mult.controller.dto.CreateAtividadeDto;
 import me.mandaveiga.mult.errors.ValidateException;
+import me.mandaveiga.mult.model.atividade.Atividade;
 import me.mandaveiga.mult.model.pessoa.Pessoa;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,27 +11,26 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 @Component
-public class PessoaValidator implements Validator {
+public class AtividadeValidator implements Validator {
 
     @Autowired
-    public PessoaValidator() {
+    public AtividadeValidator() {
 
     }
 
     @Override
     public boolean supports(Class<?> aClass) {
-        return Pessoa.class.equals(aClass);
+        return Atividade.class.equals(aClass);
     }
 
     @Override
     public void validate(Object o, Errors errors) {
-        Pessoa pessoa = (Pessoa) o;
+        CreateAtividadeDto atividade = (CreateAtividadeDto) o;
 
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "name.empty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "produtividade", "produtividade.empty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "esforco", "esforco.empty");
 
-        if (pessoa.getProdutividade() > 30) {
-            errors.rejectValue("produtividade", "Porcentagem de produtividade invalida");
+        if (atividade.getEsforco() < 1 || atividade.getEsforco() > 100) {
+            errors.rejectValue("esforco", "Esforço deve ser entre 1 e 100.");
         }
 
         if (errors.hasErrors()) {
