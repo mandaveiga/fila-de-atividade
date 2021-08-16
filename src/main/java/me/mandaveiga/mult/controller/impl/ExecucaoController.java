@@ -32,7 +32,7 @@ public class ExecucaoController extends BaseController<Atividade>{
     }
 
     @GetMapping(path = "", produces = "application/json")
-    @ApiOperation(value = "")
+    @ApiOperation(value = "Execution status")
     public ResponseEntity<Object> getIsExecuting() {
         AtividadeManager isExecuting = AtividadeManager.getInstance();
         return ResponseEntity.ok(isExecuting);

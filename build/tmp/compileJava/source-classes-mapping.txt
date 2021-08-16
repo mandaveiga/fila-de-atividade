@@ -33,8 +33,9 @@ me/mandaveiga/mult/repository/BaseRepository.java
  me.mandaveiga.mult.repository.BaseRepository
 me/mandaveiga/mult/repository/impl/AtividadeRepository.java
  me.mandaveiga.mult.repository.impl.AtividadeRepository
-me/mandaveiga/mult/controller/impl/ExecucaoController.java
- me.mandaveiga.mult.controller.impl.ExecucaoController
+me/mandaveiga/mult/model/atividade/Atividade.java
+ me.mandaveiga.mult.model.atividade.Atividade
+ me.mandaveiga.mult.model.atividade.Atividade$AtividadeBuilder
 me/mandaveiga/mult/service/CrudService.java
  me.mandaveiga.mult.service.CrudService
 me/mandaveiga/mult/errors/ValidateException.java
@@ -56,6 +57,5 @@ me/mandaveiga/mult/controller/validator/AtividadeValidator.java
  me.mandaveiga.mult.controller.validator.AtividadeValidator
 me/mandaveiga/mult/service/impl/atividade/AtividadeServiceImpl.java
  me.mandaveiga.mult.service.impl.atividade.AtividadeServiceImpl
-me/mandaveiga/mult/model/atividade/Atividade.java
- me.mandaveiga.mult.model.atividade.Atividade
- me.mandaveiga.mult.model.atividade.Atividade$AtividadeBuilder
+me/mandaveiga/mult/controller/impl/ExecucaoController.java
+ me.mandaveiga.mult.controller.impl.ExecucaoController
