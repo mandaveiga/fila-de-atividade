@@ -27,11 +27,13 @@ import java.util.Optional;
 public class AtividadeController extends BaseController<Atividade> {
 
     private final AtividadeValidator atividadeValidator;
+    private final AtividadeService service;
     private final PessoaService pessoaService;
 
     @Autowired
     public AtividadeController(AtividadeService service, AtividadeValidator atividadeValidator, PessoaService pessoaService) {
         super(service);
+        this.service = service;
         this.pessoaService = pessoaService;
         this.atividadeValidator = atividadeValidator;
     }
@@ -41,11 +43,17 @@ public class AtividadeController extends BaseController<Atividade> {
     public ResponseEntity<Object> save(@RequestBody @NonNull CreateAtividadeDto body, @Nullable BindingResult result) {
         atividadeValidator.validate(body, result);
 
-        Optional<Pessoa> entityPessoa = pessoaService.findById(Optional.ofNullable(body.getPessoaId()).orElse(0L));
+        Optional<Pessoa> pessoaEntity = pessoaService.findById(Optional.ofNullable(body.getPessoaId()).orElse(0L));
+
+        int execution = pessoaEntity
+                .map((pessoa) -> service.calculateExecutionActivity(body.getEsforco(), pessoa.getProdutividade()))
+                .orElse(0);
 
         Atividade atividade = Atividade.builder()
                 .esforco(body.getEsforco())
-                .pessoa(entityPessoa.orElse(null)).build();
+                .pessoa(pessoaEntity.orElse(null))
+                .execucao(execution)
+                .build();
 
         Optional<Atividade> entity = service.save(atividade);
 
@@ -59,17 +67,21 @@ public class AtividadeController extends BaseController<Atividade> {
     public ResponseEntity<Object> update(@PathVariable("id") @NonNull String idAtividade, @RequestBody @NonNull UpdateAtividadeDto body) {
 
         Optional<Atividade> atividadeEntity = service.findById(Long.parseLong(idAtividade));
-        if(!atividadeEntity.isPresent()){
+        if (!atividadeEntity.isPresent()) {
            return ResponseEntity.notFound().build();
         }
 
         Optional<Pessoa> pessoaEntity = pessoaService.findById(body.getPessoaId());
-        if(!pessoaEntity.isPresent()){
+        if (!pessoaEntity.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
 
+        int execution = service.calculateExecutionActivity(atividadeEntity.get().getEsforco(), pessoaEntity.get().getProdutividade());
+
         Atividade atividade = atividadeEntity.get();
+
         atividade.setPessoa(pessoaEntity.get());
+        atividade.setExecucao(execution);
 
         Optional<Atividade> entity = service.save(atividade);
 

@@ -1,11 +1,10 @@
 package me.mandaveiga.mult.service.impl.atividade;
 
+import me.mandaveiga.mult.errors.BusinessException;
 import me.mandaveiga.mult.model.atividade.Atividade;
 import me.mandaveiga.mult.model.atividade.AtividadeManager;
 import me.mandaveiga.mult.model.atividade.Execution;
-import me.mandaveiga.mult.model.pessoa.Pessoa;
 import me.mandaveiga.mult.repository.impl.AtividadeRepository;
-import me.mandaveiga.mult.repository.impl.PessoaRepository;
 import me.mandaveiga.mult.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,10 +22,17 @@ public class AtividadeServiceImpl extends BaseService<Atividade> implements Ativ
         super(repository);
     }
 
-    public Execution startingExecution() throws ClassNotFoundException {
-        //Todo antes de iniciar validar se todas as tarefas estao com pessoa associadas
+    public Execution startingExecution() throws BusinessException {
 
-        int minutosDeEsforcoTotal = runtimeQueue((List<Atividade>) repository.findAll());
+        List<Atividade> atividades = (List<Atividade>) repository.findAll();
+
+        boolean allActivitiesHasAssociatedPerson = atividades.stream().allMatch(atividade -> atividade.getPessoa() != null);
+
+        if (!allActivitiesHasAssociatedPerson) {
+            throw new BusinessException("Não é possível executar enquanto há atividades sem qualquer pessoa associada.");
+        }
+
+        int minutosDeEsforcoTotal = calculateExecutionQueue(atividades);
 
         LocalDateTime timeStart = LocalDateTime.now();
         LocalDateTime timeEnd = timeStart.plusMinutes(minutosDeEsforcoTotal);
@@ -48,15 +54,20 @@ public class AtividadeServiceImpl extends BaseService<Atividade> implements Ativ
         return 0;
     }
 
-    private int runtimeQueue(List<Atividade> atividades) throws ClassNotFoundException {
-        //TODO Criar novo campo em atividade para guardar o execucao com a pessoa
+    private int calculateExecutionQueue(List<Atividade> atividades) throws BusinessException {
         Optional<Atividade> maiorAtividade = atividades
                 .stream()
-                .max(Comparator.comparing(Atividade::getEsforco));
+                .max(Comparator.comparing(Atividade::getExecucao));
 
         if(!maiorAtividade.isPresent()){
-            throw new ClassNotFoundException();
+            throw new BusinessException("Não a nenhuma atividade para ser executada");
         }
         return maiorAtividade.get().getEsforco();
+    }
+
+    public int calculateExecutionActivity(int esforco, int produtividade) {
+        double execution = esforco - (esforco * (Double.valueOf(produtividade) / 100));
+
+        return (int) execution;
     }
 }

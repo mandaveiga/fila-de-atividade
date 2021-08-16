@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Atividade extends AbstractModel implements Comparable {
+public class Atividade extends AbstractModel {
 
     @ManyToOne
     @JoinColumn(name="pessoaId", referencedColumnName = "id")
@@ -23,18 +23,7 @@ public class Atividade extends AbstractModel implements Comparable {
     @Column(nullable = false)
     private int esforco;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private int execucao;
 
-    @Override
-    public int compareTo(Object o) {
-        Atividade atividade = (Atividade) o;
-        if (this.esforco < atividade.esforco) {
-            return -1;
-        }
-        if (this.esforco > atividade.esforco) {
-            return 1;
-        }
-        return 0;
-    }
 }

@@ -4,9 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import me.mandaveiga.mult.controller.BaseController;
 import me.mandaveiga.mult.controller.validator.AtividadeValidator;
+import me.mandaveiga.mult.errors.BusinessException;
 import me.mandaveiga.mult.model.atividade.Atividade;
 import me.mandaveiga.mult.model.atividade.AtividadeManager;
 import me.mandaveiga.mult.model.atividade.Execution;
+import me.mandaveiga.mult.model.error.ApplicationError;
 import me.mandaveiga.mult.service.impl.atividade.AtividadeService;
 import me.mandaveiga.mult.service.impl.pessoa.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +45,8 @@ public class ExecucaoController extends BaseController<Atividade>{
             Execution execution = atividadeService.startingExecution();
 
             return ResponseEntity.ok(execution);
-        } catch (ClassNotFoundException e) {
-            return ResponseEntity.notFound().build();
+        }catch (BusinessException e) {
+            return ResponseEntity.badRequest().body(new ApplicationError(e.getMessage()));
         }
     }
 }
