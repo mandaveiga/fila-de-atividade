@@ -3,6 +3,9 @@ package me.mandaveiga.mult.model.atividade;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Getter
 @Setter
 public class AtividadeManager {
@@ -17,9 +20,11 @@ public class AtividadeManager {
         return INSTANCE;
     }
 
-    private boolean isExecuting;
+    private boolean executing;
+    private LocalDateTime DateEnd;
+    private LocalDateTime DateStart;
 
     private AtividadeManager() {
-        this.isExecuting = false;
+        this.executing = false;
     }
 }

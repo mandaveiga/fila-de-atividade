@@ -1,10 +1,15 @@
 package me.mandaveiga.mult.controller.impl;
 
-import io.micrometer.core.lang.NonNull;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import me.mandaveiga.mult.controller.dto.ExecutionDto;
+import me.mandaveiga.mult.controller.BaseController;
+import me.mandaveiga.mult.controller.validator.AtividadeValidator;
+import me.mandaveiga.mult.model.atividade.Atividade;
 import me.mandaveiga.mult.model.atividade.AtividadeManager;
+import me.mandaveiga.mult.model.atividade.Execution;
+import me.mandaveiga.mult.service.impl.atividade.AtividadeService;
+import me.mandaveiga.mult.service.impl.pessoa.PessoaService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,23 +17,34 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RequestMapping("/execucao")
 @Api(value = "Activities execution")
-public class ExecucaoController {
+public class ExecucaoController extends BaseController<Atividade>{
+
+    private final AtividadeValidator atividadeValidator;
+    private final AtividadeService atividadeService;
+
+    @Autowired
+    public ExecucaoController(AtividadeService service, AtividadeValidator atividadeValidator, PessoaService pessoaService) {
+        super(service);
+        this.atividadeValidator = atividadeValidator;
+        this.atividadeService = service;
+    }
 
     @GetMapping(path = "", produces = "application/json")
     @ApiOperation(value = "")
     public ResponseEntity<Object> getIsExecuting() {
-        boolean isExecuting = AtividadeManager.getInstance().isExecuting();
-
-        ExecutionDto executionDto = new ExecutionDto(isExecuting);
-
-        return ResponseEntity.ok(executionDto);
+        AtividadeManager isExecuting = AtividadeManager.getInstance();
+        return ResponseEntity.ok(isExecuting);
     }
 
     @PutMapping(path = "", produces = "application/json")
-    @ApiOperation(value = "")
-    public ResponseEntity<Object> updateIsExecuting(@RequestBody @NonNull ExecutionDto body) {
-        AtividadeManager.getInstance().setExecuting(body.isExecuting());
+    @ApiOperation(value = "start Executing")
+    public ResponseEntity<Object> startExecuting() {
+        try {
+            Execution execution = atividadeService.startingExecution();
 
-        return ResponseEntity.noContent().build();
+            return ResponseEntity.ok(execution);
+        } catch (ClassNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

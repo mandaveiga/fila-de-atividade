@@ -8,6 +8,7 @@ import me.mandaveiga.mult.controller.BaseController;
 import me.mandaveiga.mult.controller.validator.PessoaValidator;
 import me.mandaveiga.mult.model.error.ApplicationError;
 import me.mandaveiga.mult.model.pessoa.Pessoa;
+import me.mandaveiga.mult.service.impl.pessoa.PessoaService;
 import me.mandaveiga.mult.service.impl.pessoa.PessoaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class PessoaController extends BaseController<Pessoa> {
     private final PessoaValidator pessoaValidator;
 
     @Autowired
-    public PessoaController(PessoaServiceImpl service, PessoaValidator pessoaValidator) {
+    public PessoaController(PessoaService service, PessoaValidator pessoaValidator) {
         super(service);
         this.pessoaValidator = pessoaValidator;
     }

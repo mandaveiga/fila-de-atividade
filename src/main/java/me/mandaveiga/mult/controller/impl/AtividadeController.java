@@ -10,6 +10,7 @@ import me.mandaveiga.mult.controller.dto.UpdateAtividadeDto;
 import me.mandaveiga.mult.controller.validator.AtividadeValidator;
 import me.mandaveiga.mult.model.atividade.Atividade;
 import me.mandaveiga.mult.model.pessoa.Pessoa;
+import me.mandaveiga.mult.service.impl.atividade.AtividadeService;
 import me.mandaveiga.mult.service.impl.atividade.AtividadeServiceImpl;
 import me.mandaveiga.mult.service.impl.pessoa.PessoaService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class AtividadeController extends BaseController<Atividade> {
     private final PessoaService pessoaService;
 
     @Autowired
-    public AtividadeController(AtividadeServiceImpl service, AtividadeValidator atividadeValidator, PessoaService pessoaService) {
+    public AtividadeController(AtividadeService service, AtividadeValidator atividadeValidator, PessoaService pessoaService) {
         super(service);
         this.pessoaService = pessoaService;
         this.atividadeValidator = atividadeValidator;
